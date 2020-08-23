@@ -54,7 +54,7 @@ var tableConfig_json_1 = require("./tableConfig.json");
 var Table_1 = require("./Table");
 var firebase_1 = require("../services/firebase");
 var react_router_dom_1 = require("react-router-dom");
-var mockData_1 = require("../utils/mockData");
+var mockData_1 = require("../../server/mockData");
 var arrange_1 = require("../utils/arrange");
 var defaultUser = {
     id: 'id_unknown',
@@ -65,7 +65,7 @@ var defaultTable = {
 };
 var TABLES = tableConfig_json_1["default"].tables || []; // Todo: move to fetch
 var USERS = mockData_1["default"].users || []; // Todo: move to fetch
-var TABLES_WITH_USERS = arrange_1.placeUserToTables(USERS, TABLES) || [];
+var TABLES_WITH_USERS = arrange_1.placeUserToTables(USERS, TABLES) || []; // Todo: move to useEffect
 var Theater = function () {
     var history = react_router_dom_1.useHistory();
     var _a = react_1.useState(defaultUser), user = _a[0], setUser = _a[1]; // Current user
@@ -126,8 +126,7 @@ var Theater = function () {
         }
         // Current User added successfully
         if (table) {
-            // Remove Current User from old table
-            arrange_1.removeUserFromTable(table, user);
+            arrange_1.removeUserFromTable(table, user); // Remove Current User from old table
         }
         setTable(newTable);
     }

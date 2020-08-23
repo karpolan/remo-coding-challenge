@@ -1,10 +1,10 @@
 const API_URL = 'http://localhost:8000/';
 
 export const sendGetRequest = async (endpoint: string) => {
-  const fullUrl = (endpoint.indexOf(API_URL) === -1) ? API_URL + endpoint : endpoint;
+  const fullUrl = endpoint.indexOf(API_URL) === -1 ? API_URL + endpoint : endpoint;
 
   const headers = {
-    'Accept': 'application/json',
+    Accept: 'application/json',
     'Access-Control-Allow-Origin': '*',
     'Content-Type': 'application/json',
   };
@@ -25,9 +25,9 @@ export const sendGetRequest = async (endpoint: string) => {
 };
 
 export const sendPostRequest = async (endpoint: string, data: any) => {
-  const fullUrl = (endpoint.indexOf(API_URL) === -1) ? API_URL + endpoint : endpoint;
+  const fullUrl = endpoint.indexOf(API_URL) === -1 ? API_URL + endpoint : endpoint;
   const headers = {
-    'Accept': 'application/json',
+    Accept: 'application/json',
     'Access-Control-Allow-Origin': '*',
     'Content-Type': 'application/json',
   };

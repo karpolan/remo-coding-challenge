@@ -21,7 +21,8 @@ const Table: React.FC<TableProps> = ({ id, x, y, width, height, seats, onClick, 
 	return (
 		<div className="rt-room" style={style} onClick={onClick} onDoubleClick={onDoubleClick}>
 			<div className="rt-room-name">{id}</div>
-			{seats && seats?.map(({ x, y, user }, index) => <UserComponent key={user?.id || index} x={x} y={y} name={user?.name} avatar={user?.avatar} currentUser={user?.currentUser} />)}
+			{seats && seats?.map(({ x, y, user }, index) =>
+				<UserComponent key={user?.id || index} x={x} y={y} name={user?.name} avatar={user?.avatar} currentUser={user?.currentUser} />)}
 		</div>
 	);
 };

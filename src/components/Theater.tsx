@@ -6,7 +6,7 @@ import TableComponent from './Table';
 import Firebase from '../services/firebase';
 import { useHistory } from 'react-router-dom';
 import { IUser, ITable } from './types';
-import MockData from '../utils/mockData';
+import MockData from '../../server/mockData';
 import { placeUserToTables, addUserToTable, findTableById, removeUserFromTable } from '../utils/arrange'
 
 const defaultUser: IUser = {
@@ -20,7 +20,7 @@ const defaultTable: ITable = {
 
 const TABLES = TableConfig.tables || []; // Todo: move to fetch
 const USERS = MockData.users || []; // Todo: move to fetch
-const TABLES_WITH_USERS = placeUserToTables(USERS, TABLES) || []
+const TABLES_WITH_USERS = placeUserToTables(USERS, TABLES) || [] // Todo: move to useEffect
 
 const Theater: React.FC = () => {
   const history = useHistory();
@@ -68,8 +68,7 @@ const Theater: React.FC = () => {
 
     // Current User added successfully
     if (table) {
-      // Remove Current User from old table
-      removeUserFromTable(table, user);
+      removeUserFromTable(table, user); // Remove Current User from old table
     }
     setTable(newTable as ITable)
   }

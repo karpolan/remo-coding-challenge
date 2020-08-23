@@ -17,10 +17,14 @@ function generateMockData() {
     users.push(newUser);
   }
   return {
-    userCount,
+    currentUser: {
+      id: 'id_unknown',
+      name: 'Guess who?',
+    },
     users,
   };
 }
 
-export const mockData = generateMockData();
-export default mockData;
+const mockData = generateMockData();
+module.exports = mockData;
+// export default mockData;
