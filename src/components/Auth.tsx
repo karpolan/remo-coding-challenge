@@ -10,21 +10,23 @@ const Auth: React.FC = () => {
     Firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         // TODO: Store user details
+        console.log('Logged User:', user)
         history.push('/theater');
       }
     });
 
     // Sample API requests
     sendGetRequest(`sample-get-request?param=1`).then(response => console.log(response));
-    sendPostRequest(`sample-post-request`, {postParam: 1}).then(response => console.log(response));
-  }, []);
+    sendPostRequest(`sample-post-request`, { postParam: 1 }).then(response => console.log(response));
+  }, [/*history*/]);
+
   const redirect = () => {
     const provider = new Firebase.auth.GoogleAuthProvider();
     Firebase.auth().signInWithPopup(provider);
   };
 
-  return ( 
-    <div 
+  return (
+    <div
       style={{
         height: '100vh',
         display: 'flex',
@@ -35,8 +37,8 @@ const Auth: React.FC = () => {
     >
       <h1> Remo Coding Challenge Join Room </h1>
       <button onClick={redirect}> Login With Google </button>
-    </div> 
+    </div>
   );
 };
- 
+
 export default Auth;

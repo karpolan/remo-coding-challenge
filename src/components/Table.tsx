@@ -1,6 +1,4 @@
 import * as React from 'react';
-// import './Theater.scss';
-// import TableConfig from './tableConfig.json';
 
 type TableProps = {
 	id: string,

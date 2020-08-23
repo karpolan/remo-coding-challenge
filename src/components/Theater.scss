@@ -1,4 +1,4 @@
-.remo-theater{
+.remo-theater {
   margin-left: -378px;
   margin-top: -300px;
 
@@ -6,9 +6,37 @@
     text-align: right;
     padding: 1rem;
     position: fixed;
-    z-index: 1;
     width: 100%;
     box-sizing: border-box;
+
+    left: 0;
+    top: 0;
+    z-index: 2;
+    //    border: 1px #f0f dotted;
+
+    .user {
+      display: inline;
+      h5,
+      h6 {
+        margin: 0;
+        padding: 0;
+      }
+      button {
+        margin-top: 0.5rem;
+      }
+    }
+
+    .avatar {
+      display: inline;
+      float: right;
+      margin-left: 1rem;
+      img {
+        width: 64px;
+        height: 64px;
+        vertical-align: middle;
+        border-radius: 50%;
+      }
+    }
   }
 
   .rt-rooms {
