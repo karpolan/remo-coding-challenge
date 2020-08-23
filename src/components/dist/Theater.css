@@ -2,6 +2,12 @@
   margin-left: -378px;
   margin-top: -300px;
 }
+.remo-theater .avatar img {
+  width: 64px;
+  height: 64px;
+  vertical-align: middle;
+  border-radius: 50%;
+}
 .remo-theater .rt-app-bar {
   text-align: right;
   padding: 1rem;
@@ -24,15 +30,8 @@
   margin-top: 0.5rem;
 }
 .remo-theater .rt-app-bar .avatar {
-  display: inline;
   float: right;
   margin-left: 1rem;
-}
-.remo-theater .rt-app-bar .avatar img {
-  width: 64px;
-  height: 64px;
-  vertical-align: middle;
-  border-radius: 50%;
 }
 .remo-theater .rt-rooms {
   position: absolute;
@@ -53,6 +52,13 @@
 .remo-theater .rt-rooms .rt-room:hover {
   background: rgba(0, 0, 0, 0.1);
   border-radius: 4px;
+}
+.remo-theater .rt-rooms .rt-user {
+  position: absolute;
+  cursor: default;
+}
+.remo-theater .rt-rooms .rt-user .title {
+  text-align: center;
 }
 .remo-theater .rt-background {
   position: absolute;

@@ -47,7 +47,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-// import * as React from 'react';
 var react_1 = require("react");
 require("./Theater.scss");
 var conference_map_svg_1 = require("../assets/conference-map.svg");
@@ -55,13 +54,19 @@ var tableConfig_json_1 = require("./tableConfig.json");
 var Table_1 = require("./Table");
 var firebase_1 = require("../services/firebase");
 var react_router_dom_1 = require("react-router-dom");
+var mockData_1 = require("./mockData");
+var utils_1 = require("../utils");
 var defaultUser = {
+    id: 'id_unknown',
     name: 'Guess who?'
 };
+var TABLES = tableConfig_json_1["default"].tables || []; // Todo make in static outside the component or move to fetch
+var USERS = mockData_1["default"].users || []; // Todo make in static outside the component or move to fetch
+var TABLES_WITH_USERS = utils_1.placeUserToTables(USERS, TABLES) || [];
 var Theater = function () {
     var history = react_router_dom_1.useHistory();
     var _a = react_1.useState(defaultUser), user = _a[0], setUser = _a[1];
-    var listTables = tableConfig_json_1["default"].tables || [];
+    var tablesWithUsers = TABLES_WITH_USERS;
     react_1.useEffect(function () {
         firebase_1["default"].auth().onAuthStateChanged(function (currentUser) { return __awaiter(void 0, void 0, void 0, function () {
             var _a, _b;
@@ -71,6 +76,7 @@ var Theater = function () {
                         if (!currentUser) return [3 /*break*/, 2];
                         _a = setUser;
                         _b = {
+                            id: currentUser.uid,
                             uid: currentUser.uid
                         };
                         return [4 /*yield*/, currentUser.getIdToken()];
@@ -100,16 +106,15 @@ var Theater = function () {
             }
         });
     }); };
-    console.log('user:', user);
     return (react_1["default"].createElement("div", { className: "remo-theater", style: { width: tableConfig_json_1["default"].width, height: tableConfig_json_1["default"].height } },
         react_1["default"].createElement("div", { className: "rt-app-bar" },
             react_1["default"].createElement("div", { className: 'user' },
                 user.avatar ? react_1["default"].createElement("div", { className: 'avatar' },
-                    react_1["default"].createElement("img", { src: user.avatar })) : null,
+                    react_1["default"].createElement("img", { src: user.avatar, title: user.name })) : null,
                 react_1["default"].createElement("h5", null, user.name),
                 Boolean(user.email) && react_1["default"].createElement("h6", null, user.email),
                 react_1["default"].createElement("button", { onClick: handleLogout }, "Logout"))),
-        react_1["default"].createElement("div", { className: "rt-rooms" }, listTables.map(function (table) { return react_1["default"].createElement(Table_1["default"], __assign({ key: table.id }, table)); })),
+        react_1["default"].createElement("div", { className: "rt-rooms" }, tablesWithUsers.map(function (table) { return react_1["default"].createElement(Table_1["default"], __assign({ key: table.id }, table)); })),
         react_1["default"].createElement("div", { className: "rt-background" },
             react_1["default"].createElement("img", { src: conference_map_svg_1["default"], alt: "Conference background" }))));
 };

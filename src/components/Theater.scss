@@ -2,6 +2,16 @@
   margin-left: -378px;
   margin-top: -300px;
 
+  .avatar {
+    // display: inline;
+    img {
+      width: 64px;
+      height: 64px;
+      vertical-align: middle;
+      border-radius: 50%;
+    }
+  }
+
   .rt-app-bar {
     text-align: right;
     padding: 1rem;
@@ -12,7 +22,7 @@
     left: 0;
     top: 0;
     z-index: 2;
-    //    border: 1px #f0f dotted;
+    // border: 1px #f0f dotted;
 
     .user {
       display: inline;
@@ -27,21 +37,15 @@
     }
 
     .avatar {
-      display: inline;
       float: right;
       margin-left: 1rem;
-      img {
-        width: 64px;
-        height: 64px;
-        vertical-align: middle;
-        border-radius: 50%;
-      }
     }
   }
 
   .rt-rooms {
     position: absolute;
     z-index: 1;
+
     .rt-room {
       position: absolute;
       cursor: pointer;
@@ -60,7 +64,18 @@
         border-radius: 4px;
       }
     }
+
+    .rt-user {
+      position: absolute;
+      cursor: default;
+
+      .title {
+        // width: 64px;
+        text-align: center;
+      }
+    }
   }
+
   .rt-background {
     position: absolute;
     img {

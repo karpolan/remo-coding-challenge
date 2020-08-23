@@ -10,6 +10,7 @@ const Auth: React.FC = () => {
     Firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         // TODO: Store user details
+
         console.log('Logged User:', user)
         history.push('/theater');
       }
