@@ -38,6 +38,7 @@ const Theater: React.FC = () => {
           email: String(currentUser.email),
           name: String(currentUser.displayName),
           avatar: String(currentUser.photoURL),
+          currentUser: true,
         })
       } else {
         setUser(defaultUser)

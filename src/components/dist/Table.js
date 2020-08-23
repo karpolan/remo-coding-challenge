@@ -18,7 +18,7 @@ var Table = function (_a) {
         React.createElement("div", { className: "rt-room-name" }, id),
         seats && (seats === null || seats === void 0 ? void 0 : seats.map(function (_a, index) {
             var x = _a.x, y = _a.y, user = _a.user;
-            return React.createElement(User_1["default"], { key: (user === null || user === void 0 ? void 0 : user.id) || index, x: x, y: y, name: user === null || user === void 0 ? void 0 : user.name, avatar: user === null || user === void 0 ? void 0 : user.avatar });
+            return React.createElement(User_1["default"], { key: (user === null || user === void 0 ? void 0 : user.id) || index, x: x, y: y, name: user === null || user === void 0 ? void 0 : user.name, avatar: user === null || user === void 0 ? void 0 : user.avatar, currentUser: user === null || user === void 0 ? void 0 : user.currentUser });
         }))));
 };
 exports["default"] = Table;

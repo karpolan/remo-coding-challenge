@@ -89,6 +89,7 @@ var Theater = function () {
                                 _b.email = String(currentUser.email),
                                 _b.name = String(currentUser.displayName),
                                 _b.avatar = String(currentUser.photoURL),
+                                _b.currentUser = true,
                                 _b)]);
                         return [3 /*break*/, 3];
                     case 2:

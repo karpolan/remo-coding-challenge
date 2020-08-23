@@ -5,6 +5,7 @@ export interface IUser {
   email?: string;
   name?: string;
   avatar?: string;
+  currentUser?: boolean;
 }
 
 export interface ISeat {
