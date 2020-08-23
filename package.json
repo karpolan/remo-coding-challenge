@@ -1,7 +1,8 @@
 {
-  "name": "remo-coding-challenge-1",
-  "version": "0.1.0",
+  "name": "remo-coding-challenge-1-by-karpolan",
+  "version": "0.1.1",
   "private": true,
+  "author": "Anton Karpenko <i@karpolan.com> (https://karpolan.com)",
   "dependencies": {
     "@types/jest": "^26.0.0",
     "@types/node": "^14.0.13",

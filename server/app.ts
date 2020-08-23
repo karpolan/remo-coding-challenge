@@ -1,5 +1,5 @@
 // tslint:disable-next-line: no-var-requires
-const express = require('express'); 
+const express = require('express');
 // tslint:disable-next-line: no-var-requires
 const cors = require('cors');
 // tslint:disable-next-line: no-var-requires
@@ -17,3 +17,5 @@ app.get('/sample-get-request', (req: any, res: any) => res.json(req.query));
 app.post('/sample-post-request', (req: any, res: any) => res.json(req.body));
 
 app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`));
+
+export {}; // Fix to make TS compiler happy. Was error: server/app.ts:2:1 - error TS1208: All files must be modules when the '--isolatedModules' flag is provided.
