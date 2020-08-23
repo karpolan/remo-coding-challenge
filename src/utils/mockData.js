@@ -1,11 +1,10 @@
-import { DEFAULT_AVATAR } from './consts';
-
 /**
  * Generates Mock data
  * Users, and so on
  */
 function generateMockData() {
-  const userCount = 69;
+  //const userCount = 69;
+  const userCount = 99;
   const users = [];
   for (let i = 0; i < userCount; i++) {
     const newUser = {
@@ -14,7 +13,6 @@ function generateMockData() {
       idToken: `id_token_${i}`,
       email: `email${i + 1}@domain.com`,
       name: `User #${i + 1}`,
-      avatar: DEFAULT_AVATAR,
     };
     users.push(newUser);
   }

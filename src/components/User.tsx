@@ -1,19 +1,18 @@
 import * as React from 'react';
-import { DEFAULT_AVATAR } from './consts';
-
+import { DEFAULT_AVATAR } from '../utils/consts';
 
 interface IUserProps {
 	x: number;
 	y: number;
 	name?: string;
 	avatar?: string;
-	index?: number;
 }
 
 /**
- * Renders single User at specific position
+ * Renders single User at specific position.
+ * Don't render user without name
  */
-const User: React.FC<IUserProps> = ({ x, y, name, avatar, index }) => {
+const User: React.FC<IUserProps> = ({ x, y, name, avatar }) => {
 	if (!name) return null; // Don't render non-existing users
 
 	const style = {
@@ -22,8 +21,8 @@ const User: React.FC<IUserProps> = ({ x, y, name, avatar, index }) => {
 	}
 	return (
 		<div className='rt-user' style={style}>
-			<div className='avatar'><img src={avatar || DEFAULT_AVATAR} title={name} /></div>
-			<div className='title'>{name}</div>
+			<div className='avatar'><img src={avatar || DEFAULT_AVATAR} title={name} alt={name} /></div>
+			{avatar ? null : <div className='title'>{name}</div>}
 		</div>
 	);
 };

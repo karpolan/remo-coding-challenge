@@ -15,9 +15,9 @@ export interface ISeat {
 
 export interface ITable {
   id: string;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
+  x?: number;
+  y?: number;
+  width?: number;
+  height?: number;
   seats?: ISeat[];
 }

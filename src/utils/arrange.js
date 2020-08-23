@@ -4,7 +4,9 @@
  * @param {object} user - user object to add
  * @returns {number} index of seat, -1 means there was no free seats
  */
-function addUserToTable(table, user) {
+export function addUserToTable(table, user) {
+  if (!table || !Array.isArray(table.seats)) return -1;
+
   const freeSeat = table.seats.find((seat) => !seat.user);
   if (!freeSeat) {
     return -1; // Cannot find empty seat
@@ -19,8 +21,10 @@ function addUserToTable(table, user) {
  * @param {object} user - user object to remove
  * @returns {number} index of seat the removed user had, -1 means there is no user on that table
  */
-function removeUserFromTable(table, user) {
-  const userSeat = table.seats.find((seat) => seat.user === user); // Todo: compting of user.id could be enough
+export function removeUserFromTable(table, user) {
+  if (!table || !Array.isArray(table.seats)) return -1;
+
+  const userSeat = table.seats.find((seat) => seat.user.id === user.id); // Todo: do we need full object match?
   if (!userSeat) {
     return -1; // Cannot find user
   }
@@ -35,6 +39,8 @@ function removeUserFromTable(table, user) {
  * @returns {number} number of empty seats
  */
 function countFreeSeats(table) {
+  if (!table || !Array.isArray(table.seats)) return -1;
+
   const result = table.seats.reduce((prev, curr) => (curr.user ? prev : prev + 1), 0);
   // console.log(`getFreeSeatsOnTable(${table.id}) - result`, result);
   return result;
@@ -46,6 +52,8 @@ function countFreeSeats(table) {
  * @returns {number} number of occupied seats
  */
 function countOccupiedSeats(table) {
+  if (!table || !Array.isArray(table.seats)) return -1;
+
   const result = table.seats.reduce((prev, curr) => (curr.user ? prev + 1 : prev), 0);
   // console.log(`getFreeSeatsOnTable(${table.id}) - result`, result);
   return result;
@@ -57,12 +65,14 @@ function countOccupiedSeats(table) {
  * @returns {number} index of "free" table,  -1 means there is no free table
  */
 function getFreeTableIndex(tables) {
+  if (!Array.isArray(tables)) return -1;
+
   const sortedTables = [...tables].sort((a, b) => {
     if (countOccupiedSeats(a) === 1) return -1; // Table with 1 user has priority
     if (countOccupiedSeats(b) === 1) return 1; // Table with 1 user has priority
     return countFreeSeats(b) - countFreeSeats(a);
   });
-  console.log('sortedTables:', sortedTables);
+  // console.log('sortedTables:', sortedTables);
 
   // When there is no user on the tables
   const mostFreeTableSeatsCount = countFreeSeats(sortedTables[0]);
@@ -70,6 +80,18 @@ function getFreeTableIndex(tables) {
 
   const result = tables.indexOf(sortedTables[0]);
   return result;
+}
+
+/**
+ * Returns table object with given id
+ * @param {array} tables - arrays ot table objects with seats arrays
+ * @param {string} tableId - id of the table to find
+ * @returns {object} - found table object or null
+ */
+export function findTableById(tables, tableId) {
+  if (!Array.isArray(tables)) return null;
+
+  return tables.find((table) => table.id === tableId);
 }
 
 /**
