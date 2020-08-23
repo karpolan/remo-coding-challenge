@@ -70,8 +70,10 @@
       cursor: default;
 
       .title {
-        // width: 64px;
+        position: absolute;
+        z-index: 3;
         text-align: center;
+        top: 16px;
       }
     }
   }

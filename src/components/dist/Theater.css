@@ -58,7 +58,10 @@
   cursor: default;
 }
 .remo-theater .rt-rooms .rt-user .title {
+  position: absolute;
+  z-index: 3;
   text-align: center;
+  top: 16px;
 }
 .remo-theater .rt-background {
   position: absolute;
