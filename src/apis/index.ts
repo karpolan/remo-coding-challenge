@@ -5,6 +5,9 @@ const HEADERS = {
   'Content-Type': 'application/json',
 };
 
+/**
+ * Loads all users
+ */
 export async function apiGetUsers() {
   const LOG_ID = 'apiGetUsers()';
   console.time(LOG_ID);
@@ -25,6 +28,9 @@ export async function apiGetUsers() {
   }
 }
 
+/**
+ * Saves All users
+ */
 export async function apiPostUsers(users: []) {
   const LOG_ID = 'apiPostUsers()';
   console.time(LOG_ID);
@@ -46,6 +52,9 @@ export async function apiPostUsers(users: []) {
   }
 }
 
+/**
+ * Returns currently logged user data
+ */
 export async function apiGetCurrentUser() {
   const LOG_ID = 'apiGetCurrentUser()';
   console.time(LOG_ID);
@@ -56,7 +65,7 @@ export async function apiGetCurrentUser() {
       mode: 'cors',
     });
     const result = await res.json();
-    console.warn(`${LOG_ID} - success:`, result);
+    // console.warn(`${LOG_ID} - success:`, result);
     return result;
   } catch (error) {
     console.error(`${LOG_ID} -`, error);
@@ -66,6 +75,9 @@ export async function apiGetCurrentUser() {
   }
 }
 
+/**
+ * Saves currently logged user data and tableId
+ */
 export async function apiPostCurrentUser(user: object) {
   const LOG_ID = 'apiPostCurrentUser()';
   console.time(LOG_ID);
@@ -77,7 +89,7 @@ export async function apiPostCurrentUser(user: object) {
       body: JSON.stringify(user),
     });
     const result = res.status < 400;
-    console.warn(`${LOG_ID} - success:`, result);
+    // console.warn(`${LOG_ID} - success:`, result);
     return result;
   } catch (error) {
     console.error(`${LOG_ID} -`, error);

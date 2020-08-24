@@ -43,6 +43,9 @@ var HEADERS = {
     'Access-Control-Allow-Origin': '*',
     'Content-Type': 'application/json'
 };
+/**
+ * Loads all users
+ */
 function apiGetUsers() {
     return __awaiter(this, void 0, void 0, function () {
         var LOG_ID, res, result, error_1;
@@ -79,6 +82,9 @@ function apiGetUsers() {
     });
 }
 exports.apiGetUsers = apiGetUsers;
+/**
+ * Saves All users
+ */
 function apiPostUsers(users) {
     return __awaiter(this, void 0, void 0, function () {
         var LOG_ID, res, result, error_2;
@@ -114,6 +120,9 @@ function apiPostUsers(users) {
     });
 }
 exports.apiPostUsers = apiPostUsers;
+/**
+ * Returns currently logged user data
+ */
 function apiGetCurrentUser() {
     return __awaiter(this, void 0, void 0, function () {
         var LOG_ID, res, result, error_3;
@@ -135,7 +144,7 @@ function apiGetCurrentUser() {
                     return [4 /*yield*/, res.json()];
                 case 3:
                     result = _a.sent();
-                    console.warn(LOG_ID + " - success:", result);
+                    // console.warn(`${LOG_ID} - success:`, result);
                     return [2 /*return*/, result];
                 case 4:
                     error_3 = _a.sent();
@@ -150,6 +159,9 @@ function apiGetCurrentUser() {
     });
 }
 exports.apiGetCurrentUser = apiGetCurrentUser;
+/**
+ * Saves currently logged user data and tableId
+ */
 function apiPostCurrentUser(user) {
     return __awaiter(this, void 0, void 0, function () {
         var LOG_ID, res, result, error_4;
@@ -170,7 +182,7 @@ function apiPostCurrentUser(user) {
                 case 2:
                     res = _a.sent();
                     result = res.status < 400;
-                    console.warn(LOG_ID + " - success:", result);
+                    // console.warn(`${LOG_ID} - success:`, result);
                     return [2 /*return*/, result];
                 case 3:
                     error_4 = _a.sent();
