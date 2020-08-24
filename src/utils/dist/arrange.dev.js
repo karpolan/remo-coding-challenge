@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.addUserToTable = addUserToTable;
 exports.removeUserFromTable = removeUserFromTable;
 exports.findTableById = findTableById;
+exports.findTableByUserId = findTableByUserId;
 exports.placeUserToTables = placeUserToTables;
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
@@ -128,15 +129,56 @@ function findTableById(tables, tableId) {
   });
 }
 /**
+ * Returns table object where the user is sitting
+ * @param {array} tables - arrays ot table objects with seats arrays
+ * @param {string} userId - id of the user who is sitting on the table to find
+ * @returns {object} - found table object or null
+ */
+
+
+function findTableByUserId(tables, userId) {
+  if (!Array.isArray(tables)) return null;
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = tables[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var table = _step.value;
+      var userFound = table.seats.find(function (user) {
+        return user.id === userId;
+      });
+      if (userFound) return table;
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+        _iterator["return"]();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+
+  return null;
+}
+/**
  * Puts many users to full list of tables according to algorith:
  * First users sit by pairs on free tables. When all tables have more then 2+ users, users added to "most empty" tables.
- * @param {array} users
  * @param {array} tables
+ * @param {array} users
  * @returns {array} of tables with users inside
  */
 
 
-function placeUserToTables(users, tables) {
+function placeUserToTables(tables, users) {
+  if (!Array.isArray(users)) return tables;
+
   for (var userIndex = 0; userIndex < users.length; userIndex++) {
     var tableIndex = getFreeTableIndex(tables);
 

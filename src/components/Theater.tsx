@@ -6,8 +6,8 @@ import TableComponent from './Table';
 import Firebase from '../services/firebase';
 import { useHistory } from 'react-router-dom';
 import { IUser, ITable } from './types';
-import MockData from '../../server/mockData';
-import { placeUserToTables, addUserToTable, findTableById, removeUserFromTable } from '../utils/arrange'
+import { placeUserToTables, addUserToTable, findTableById, removeUserFromTable, findTableByUserId } from '../utils/arrange'
+import { apiGetUsers, apiPostCurrentUser, apiGetCurrentUser } from '../apis'
 
 const defaultUser: IUser = {
   id: 'id_unknown',
@@ -19,16 +19,39 @@ const defaultTable: ITable = {
 }
 
 const TABLES = TableConfig.tables || []; // Todo: move to fetch
-const USERS = MockData.users || []; // Todo: move to fetch
-const TABLES_WITH_USERS = placeUserToTables(USERS, TABLES) || [] // Todo: move to useEffect
 
 const Theater: React.FC = () => {
   const history = useHistory();
   const [user, setUser] = useState<IUser>(defaultUser) // Current user
   const [table, setTable] = useState<ITable>(defaultTable)  // Table where Current user is sit
-  const tables: ITable[] = TABLES_WITH_USERS;
+  const [tables, setTables] = useState<ITable[]>([])  // All Tables where sitting user
 
   useEffect(() => {
+    fetchData();
+  }, [])
+
+  useEffect(() => {
+    const foundTable = findTableByUserId(tables, user.id) || defaultTable;
+    setTable(foundTable as ITable)
+  }, [user])
+
+  useEffect(() => {
+    if (!table || table?.id === defaultTable.id) return;
+    apiPostCurrentUser({
+      ...user,
+      tableId: table?.id
+    })
+  }, [table])
+
+  function moveCurrentUser(newTable: ITable) {
+    if (table) {
+      removeUserFromTable(table, user); // Remove Current User from old table
+    }
+    setTable(newTable as ITable)
+  }
+
+  async function fetchData() {
+    // Current Logged user
     Firebase.auth().onAuthStateChanged(async (currentUser) => {
       if (currentUser) {
         setUser({
@@ -44,7 +67,21 @@ const Theater: React.FC = () => {
         setUser(defaultUser)
       }
     })
-  }, [])
+    // Users form DB
+    const users = await apiGetUsers()
+    // console.log('users:', users)
+    setTables(placeUserToTables(TABLES, users))
+
+    // Current user
+    const currentUser = await apiGetCurrentUser();
+    if (currentUser.tableId) {
+      const tableForCurrentUser = findTableById(TABLES/*tables*/, currentUser.tableId)
+      const currentSeat = addUserToTable(tableForCurrentUser, currentUser)
+      if (currentSeat > -1) {
+        moveCurrentUser(tableForCurrentUser as ITable)
+      }
+    }
+  }
 
   const handleLogout = async () => {
     await Firebase.auth().signOut();
@@ -67,10 +104,11 @@ const Theater: React.FC = () => {
     }
 
     // Current User added successfully
-    if (table) {
-      removeUserFromTable(table, user); // Remove Current User from old table
-    }
-    setTable(newTable as ITable)
+    moveCurrentUser(newTable as ITable)
+    // if (table) {
+    //   removeUserFromTable(table, user); // Remove Current User from old table
+    // }
+    // setTable(newTable as ITable)
   }
 
   return (

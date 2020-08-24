@@ -54,8 +54,8 @@ var tableConfig_json_1 = require("./tableConfig.json");
 var Table_1 = require("./Table");
 var firebase_1 = require("../services/firebase");
 var react_router_dom_1 = require("react-router-dom");
-var mockData_1 = require("../../server/mockData");
 var arrange_1 = require("../utils/arrange");
+var apis_1 = require("../apis");
 var defaultUser = {
     id: 'id_unknown',
     name: 'Guess who?'
@@ -64,42 +64,86 @@ var defaultTable = {
     id: 'id_unknown'
 };
 var TABLES = tableConfig_json_1["default"].tables || []; // Todo: move to fetch
-var USERS = mockData_1["default"].users || []; // Todo: move to fetch
-var TABLES_WITH_USERS = arrange_1.placeUserToTables(USERS, TABLES) || []; // Todo: move to useEffect
 var Theater = function () {
     var history = react_router_dom_1.useHistory();
     var _a = react_1.useState(defaultUser), user = _a[0], setUser = _a[1]; // Current user
     var _b = react_1.useState(defaultTable), table = _b[0], setTable = _b[1]; // Table where Current user is sit
-    var tables = TABLES_WITH_USERS;
+    var _c = react_1.useState([]), tables = _c[0], setTables = _c[1]; // All Tables where sitting user
     react_1.useEffect(function () {
-        firebase_1["default"].auth().onAuthStateChanged(function (currentUser) { return __awaiter(void 0, void 0, void 0, function () {
-            var _a, _b;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
+        fetchData();
+    }, []);
+    react_1.useEffect(function () {
+        var foundTable = arrange_1.findTableByUserId(tables, user.id) || defaultTable;
+        setTable(foundTable);
+    }, [user]);
+    react_1.useEffect(function () {
+        if (!table || (table === null || table === void 0 ? void 0 : table.id) === defaultTable.id)
+            return;
+        apis_1.apiPostCurrentUser(__assign(__assign({}, user), { tableId: table === null || table === void 0 ? void 0 : table.id }));
+    }, [table]);
+    function moveCurrentUser(newTable) {
+        if (table) {
+            arrange_1.removeUserFromTable(table, user); // Remove Current User from old table
+        }
+        setTable(newTable);
+    }
+    function fetchData() {
+        return __awaiter(this, void 0, void 0, function () {
+            var users, currentUser, tableForCurrentUser, currentSeat;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
-                        if (!currentUser) return [3 /*break*/, 2];
-                        _a = setUser;
-                        _b = {
-                            id: currentUser.uid,
-                            uid: currentUser.uid
-                        };
-                        return [4 /*yield*/, currentUser.getIdToken()];
+                        // Current Logged user
+                        firebase_1["default"].auth().onAuthStateChanged(function (currentUser) { return __awaiter(_this, void 0, void 0, function () {
+                            var _a, _b;
+                            return __generator(this, function (_c) {
+                                switch (_c.label) {
+                                    case 0:
+                                        if (!currentUser) return [3 /*break*/, 2];
+                                        _a = setUser;
+                                        _b = {
+                                            id: currentUser.uid,
+                                            uid: currentUser.uid
+                                        };
+                                        return [4 /*yield*/, currentUser.getIdToken()];
+                                    case 1:
+                                        _a.apply(void 0, [(_b.idToken = _c.sent(),
+                                                _b.email = String(currentUser.email),
+                                                _b.name = String(currentUser.displayName),
+                                                _b.avatar = String(currentUser.photoURL),
+                                                _b.currentUser = true,
+                                                _b)]);
+                                        return [3 /*break*/, 3];
+                                    case 2:
+                                        setUser(defaultUser);
+                                        _c.label = 3;
+                                    case 3: return [2 /*return*/];
+                                }
+                            });
+                        }); });
+                        return [4 /*yield*/, apis_1.apiGetUsers()
+                            // console.log('users:', users)
+                        ];
                     case 1:
-                        _a.apply(void 0, [(_b.idToken = _c.sent(),
-                                _b.email = String(currentUser.email),
-                                _b.name = String(currentUser.displayName),
-                                _b.avatar = String(currentUser.photoURL),
-                                _b.currentUser = true,
-                                _b)]);
-                        return [3 /*break*/, 3];
+                        users = _a.sent();
+                        // console.log('users:', users)
+                        setTables(arrange_1.placeUserToTables(TABLES, users));
+                        return [4 /*yield*/, apis_1.apiGetCurrentUser()];
                     case 2:
-                        setUser(defaultUser);
-                        _c.label = 3;
-                    case 3: return [2 /*return*/];
+                        currentUser = _a.sent();
+                        if (currentUser.tableId) {
+                            tableForCurrentUser = arrange_1.findTableById(TABLES /*tables*/, currentUser.tableId);
+                            currentSeat = arrange_1.addUserToTable(tableForCurrentUser, currentUser);
+                            if (currentSeat > -1) {
+                                moveCurrentUser(tableForCurrentUser);
+                            }
+                        }
+                        return [2 /*return*/];
                 }
             });
-        }); });
-    }, []);
+        });
+    }
     var handleLogout = function () { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -125,10 +169,11 @@ var Theater = function () {
             return;
         }
         // Current User added successfully
-        if (table) {
-            arrange_1.removeUserFromTable(table, user); // Remove Current User from old table
-        }
-        setTable(newTable);
+        moveCurrentUser(newTable);
+        // if (table) {
+        //   removeUserFromTable(table, user); // Remove Current User from old table
+        // }
+        // setTable(newTable as ITable)
     }
     return (react_1["default"].createElement("div", { className: "remo-theater", style: { width: tableConfig_json_1["default"].width, height: tableConfig_json_1["default"].height } },
         react_1["default"].createElement("div", { className: "rt-app-bar" },

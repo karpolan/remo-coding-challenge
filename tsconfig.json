@@ -37,5 +37,5 @@
     "src/__tests__/setupTests.ts",
     "chrome-extension"
   ],
-  "include": ["src", "server/mockData.js"]
+  "include": ["src"]
 }

@@ -36,8 +36,155 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.sendPostRequest = exports.sendGetRequest = void 0;
-var API_URL = 'http://localhost:8000/';
+exports.sendPostRequest = exports.sendGetRequest = exports.apiPostCurrentUser = exports.apiGetCurrentUser = exports.apiPostUsers = exports.apiGetUsers = void 0;
+var API_URL = 'http://localhost:8000';
+var HEADERS = {
+    Accept: 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Content-Type': 'application/json'
+};
+function apiGetUsers() {
+    return __awaiter(this, void 0, void 0, function () {
+        var LOG_ID, res, result, error_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    LOG_ID = 'apiGetUsers()';
+                    console.time(LOG_ID);
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 4, 5, 6]);
+                    return [4 /*yield*/, fetch(API_URL + "/users", {
+                            headers: HEADERS,
+                            method: 'GET',
+                            mode: 'cors'
+                        })];
+                case 2:
+                    res = _a.sent();
+                    return [4 /*yield*/, res.json()];
+                case 3:
+                    result = _a.sent();
+                    // console.warn(`${LOG_ID} - success:`, result);
+                    return [2 /*return*/, result];
+                case 4:
+                    error_1 = _a.sent();
+                    console.error(LOG_ID + " -", error_1);
+                    return [2 /*return*/, []];
+                case 5:
+                    console.timeEnd(LOG_ID);
+                    return [7 /*endfinally*/];
+                case 6: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.apiGetUsers = apiGetUsers;
+function apiPostUsers(users) {
+    return __awaiter(this, void 0, void 0, function () {
+        var LOG_ID, res, result, error_2;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    LOG_ID = 'apiPostUsers()';
+                    console.time(LOG_ID);
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 3, 4, 5]);
+                    return [4 /*yield*/, fetch(API_URL + "/users", {
+                            headers: HEADERS,
+                            method: 'POST',
+                            mode: 'cors',
+                            body: JSON.stringify(users)
+                        })];
+                case 2:
+                    res = _a.sent();
+                    result = res.status < 400;
+                    // console.warn(`${LOG_ID} - success:`, result);
+                    return [2 /*return*/, result];
+                case 3:
+                    error_2 = _a.sent();
+                    console.error(LOG_ID + " -", error_2);
+                    return [2 /*return*/, false];
+                case 4:
+                    console.timeEnd(LOG_ID);
+                    return [7 /*endfinally*/];
+                case 5: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.apiPostUsers = apiPostUsers;
+function apiGetCurrentUser() {
+    return __awaiter(this, void 0, void 0, function () {
+        var LOG_ID, res, result, error_3;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    LOG_ID = 'apiGetCurrentUser()';
+                    console.time(LOG_ID);
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 4, 5, 6]);
+                    return [4 /*yield*/, fetch(API_URL + "/currentUser", {
+                            headers: HEADERS,
+                            method: 'GET',
+                            mode: 'cors'
+                        })];
+                case 2:
+                    res = _a.sent();
+                    return [4 /*yield*/, res.json()];
+                case 3:
+                    result = _a.sent();
+                    console.warn(LOG_ID + " - success:", result);
+                    return [2 /*return*/, result];
+                case 4:
+                    error_3 = _a.sent();
+                    console.error(LOG_ID + " -", error_3);
+                    return [2 /*return*/, {}];
+                case 5:
+                    console.timeEnd(LOG_ID);
+                    return [7 /*endfinally*/];
+                case 6: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.apiGetCurrentUser = apiGetCurrentUser;
+function apiPostCurrentUser(user) {
+    return __awaiter(this, void 0, void 0, function () {
+        var LOG_ID, res, result, error_4;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    LOG_ID = 'apiPostCurrentUser()';
+                    console.time(LOG_ID);
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 3, 4, 5]);
+                    return [4 /*yield*/, fetch(API_URL + "/currentUser", {
+                            headers: HEADERS,
+                            method: 'POST',
+                            mode: 'cors',
+                            body: JSON.stringify(user)
+                        })];
+                case 2:
+                    res = _a.sent();
+                    result = res.status < 400;
+                    console.warn(LOG_ID + " - success:", result);
+                    return [2 /*return*/, result];
+                case 3:
+                    error_4 = _a.sent();
+                    console.error(LOG_ID + " -", error_4);
+                    return [2 /*return*/, false];
+                case 4:
+                    console.timeEnd(LOG_ID);
+                    return [7 /*endfinally*/];
+                case 5: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.apiPostCurrentUser = apiPostCurrentUser;
 exports.sendGetRequest = function (endpoint) { return __awaiter(void 0, void 0, void 0, function () {
     var fullUrl, headers, rawResponse, e_1;
     return __generator(this, function (_a) {

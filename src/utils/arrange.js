@@ -95,13 +95,31 @@ export function findTableById(tables, tableId) {
 }
 
 /**
+ * Returns table object where the user is sitting
+ * @param {array} tables - arrays ot table objects with seats arrays
+ * @param {string} userId - id of the user who is sitting on the table to find
+ * @returns {object} - found table object or null
+ */
+export function findTableByUserId(tables, userId) {
+  if (!Array.isArray(tables)) return null;
+
+  for (const table of tables) {
+    const userFound = table.seats.find((user) => user.id === userId);
+    if (userFound) return table;
+  }
+  return null;
+}
+
+/**
  * Puts many users to full list of tables according to algorith:
  * First users sit by pairs on free tables. When all tables have more then 2+ users, users added to "most empty" tables.
- * @param {array} users
  * @param {array} tables
+ * @param {array} users
  * @returns {array} of tables with users inside
  */
-export function placeUserToTables(users, tables) {
+export function placeUserToTables(tables, users) {
+  if (!Array.isArray(users)) return tables;
+
   for (let userIndex = 0; userIndex < users.length; userIndex++) {
     const tableIndex = getFreeTableIndex(tables);
     if (tableIndex < 0) {
