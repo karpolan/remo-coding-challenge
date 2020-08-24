@@ -39,7 +39,6 @@ exports.__esModule = true;
 var react_1 = require("react");
 var firebase_1 = require("../services/firebase");
 var react_router_dom_1 = require("react-router-dom");
-// import { apiPostCurrentUser } from '../apis';
 var Auth = function () {
     var history = react_router_dom_1.useHistory();
     react_1.useEffect(function () {
@@ -47,15 +46,7 @@ var Auth = function () {
             return __generator(this, function (_a) {
                 if (currentUser) {
                     // Don't save user data here, if clears tableId
-                    // apiPostCurrentUser({
-                    //   id: currentUser.uid,
-                    //   uid: currentUser.uid,
-                    //   idToken: await currentUser.getIdToken(),
-                    //   email: String(currentUser.email),
-                    //   name: String(currentUser.displayName),
-                    //   avatar: String(currentUser.photoURL),
-                    // })
-                    console.log('Logged User:', currentUser);
+                    // console.log('Logged User:', currentUser)
                     history.push('/theater');
                 }
                 return [2 /*return*/];

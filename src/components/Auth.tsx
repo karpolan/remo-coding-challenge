@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import Firebase from '../services/firebase';
 import { useHistory } from 'react-router-dom';
-// import { apiPostCurrentUser } from '../apis';
 
 const Auth: React.FC = () => {
   const history = useHistory();
@@ -10,15 +9,7 @@ const Auth: React.FC = () => {
     Firebase.auth().onAuthStateChanged(async (currentUser) => {
       if (currentUser) {
         // Don't save user data here, if clears tableId
-        // apiPostCurrentUser({
-        //   id: currentUser.uid,
-        //   uid: currentUser.uid,
-        //   idToken: await currentUser.getIdToken(),
-        //   email: String(currentUser.email),
-        //   name: String(currentUser.displayName),
-        //   avatar: String(currentUser.photoURL),
-        // })
-        console.log('Logged User:', currentUser)
+        // console.log('Logged User:', currentUser)
         history.push('/theater');
       }
     });

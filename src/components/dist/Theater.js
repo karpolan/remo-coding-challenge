@@ -48,48 +48,34 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 var react_1 = require("react");
+var tableConfig_json_1 = require("./tableConfig.json");
 require("./Theater.scss");
 var conference_map_svg_1 = require("../assets/conference-map.svg");
-var tableConfig_json_1 = require("./tableConfig.json");
 var Table_1 = require("./Table");
 var firebase_1 = require("../services/firebase");
 var react_router_dom_1 = require("react-router-dom");
 var arrange_1 = require("../utils/arrange");
 var apis_1 = require("../apis");
-var defaultUser = {
-    id: 'id_unknown',
-    name: 'Guess who?'
-};
-var defaultTable = {
-    id: 'id_unknown'
-};
-var TABLES = tableConfig_json_1["default"].tables || []; // Todo: move to fetch
 var Theater = function () {
     var history = react_router_dom_1.useHistory();
-    var _a = react_1.useState(defaultUser), user = _a[0], setUser = _a[1]; // Current user
-    var _b = react_1.useState(defaultTable), table = _b[0], setTable = _b[1]; // Table where Current user is sit
-    var _c = react_1.useState([]), tables = _c[0], setTables = _c[1]; // All Tables where sitting user
+    var _a = react_1.useState(arrange_1.defaultUser), user = _a[0], setUser = _a[1]; // Current user
+    // const [table, setTable] = useState<ITable>(defaultTable)  // Table where Current user is sit
+    //  const [tables, setTables] = useState<ITable[]>([])  // All Tables where sitting user
+    var _b = react_1.useState([]), users = _b[0], setUsers = _b[1]; // All users
     react_1.useEffect(function () {
         fetchData();
     }, []);
     react_1.useEffect(function () {
-        var foundTable = arrange_1.findTableByUserId(tables, user.id) || defaultTable;
-        setTable(foundTable);
-    }, [user]);
-    react_1.useEffect(function () {
-        if (!table || (table === null || table === void 0 ? void 0 : table.id) === defaultTable.id)
+        if (!user || (user === null || user === void 0 ? void 0 : user.id) === arrange_1.defaultUser.id)
             return;
-        apis_1.apiPostCurrentUser(__assign(__assign({}, user), { tableId: table === null || table === void 0 ? void 0 : table.id }));
-    }, [table]);
-    function moveCurrentUser(newTable) {
-        if (table) {
-            arrange_1.removeUserFromTable(table, user); // Remove Current User from old table
-        }
-        setTable(newTable);
+        apis_1.apiPostCurrentUser(user);
+    }, [user]);
+    function moveUserToTable(tableId) {
+        setUser(__assign(__assign({}, user), { tableId: tableId }));
     }
     function fetchData() {
         return __awaiter(this, void 0, void 0, function () {
-            var users, currentUser, tableForCurrentUser, currentSeat;
+            var usersFormApi, currentUser;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -116,29 +102,20 @@ var Theater = function () {
                                                 _b)]);
                                         return [3 /*break*/, 3];
                                     case 2:
-                                        setUser(defaultUser);
+                                        setUser(arrange_1.defaultUser);
                                         _c.label = 3;
                                     case 3: return [2 /*return*/];
                                 }
                             });
                         }); });
-                        return [4 /*yield*/, apis_1.apiGetUsers()
-                            // console.log('users:', users)
-                        ];
+                        return [4 /*yield*/, apis_1.apiGetUsers()];
                     case 1:
-                        users = _a.sent();
-                        // console.log('users:', users)
-                        setTables(arrange_1.placeUserToTables(TABLES, users));
+                        usersFormApi = _a.sent();
+                        setUsers(usersFormApi);
                         return [4 /*yield*/, apis_1.apiGetCurrentUser()];
                     case 2:
                         currentUser = _a.sent();
-                        if (currentUser.tableId) {
-                            tableForCurrentUser = arrange_1.findTableById(TABLES /*tables*/, currentUser.tableId);
-                            currentSeat = arrange_1.addUserToTable(tableForCurrentUser, currentUser);
-                            if (currentSeat > -1) {
-                                moveCurrentUser(tableForCurrentUser);
-                            }
-                        }
+                        console.log('currentUser:', currentUser);
                         return [2 /*return*/];
                 }
             });
@@ -156,24 +133,18 @@ var Theater = function () {
         });
     }); };
     function tableDoubleClick(tableId) {
-        var newTable = arrange_1.findTableById(tables, tableId);
-        if (newTable === table) {
+        if (tableId === user.tableId) {
             console.log("Current user is already sitting on \"" + tableId + "\" table");
             return;
         }
-        // Try to add Current User to new table
-        var newSeatIndex = arrange_1.addUserToTable(newTable, user);
-        if (newSeatIndex < 0) {
-            // No free seats on that table
+        //   const newTable = tableById(tableId);
+        var users = arrange_1.usersOnTable(tableId);
+        if (users.length >= arrange_1.MAX_USERS_ON_TABLE) {
             alert("No free seats on \"" + tableId + "\" table!");
             return;
         }
-        // Current User added successfully
-        moveCurrentUser(newTable);
-        // if (table) {
-        //   removeUserFromTable(table, user); // Remove Current User from old table
-        // }
-        // setTable(newTable as ITable)
+        // Current User can be added to this table
+        moveUserToTable(tableId);
     }
     return (react_1["default"].createElement("div", { className: "remo-theater", style: { width: tableConfig_json_1["default"].width, height: tableConfig_json_1["default"].height } },
         react_1["default"].createElement("div", { className: "rt-app-bar" },
@@ -183,7 +154,9 @@ var Theater = function () {
                 react_1["default"].createElement("h5", null, user.name),
                 Boolean(user.email) && react_1["default"].createElement("h6", null, user.email),
                 react_1["default"].createElement("button", { onClick: handleLogout }, "Logout"))),
-        react_1["default"].createElement("div", { className: "rt-rooms" }, tables.map(function (table) { return react_1["default"].createElement(Table_1["default"], __assign({ key: table.id }, table, { onDoubleClick: function () { return tableDoubleClick(table.id); } })); })),
+        react_1["default"].createElement("div", { className: "rt-rooms" }, arrange_1.TABLES.map(function (table) {
+            return react_1["default"].createElement(Table_1["default"], __assign({ key: table.id }, table, { users: arrange_1.usersOnTable(users, table.id), onDoubleClick: function () { return tableDoubleClick(table.id); } }));
+        })),
         react_1["default"].createElement("div", { className: "rt-background" },
             react_1["default"].createElement("img", { src: conference_map_svg_1["default"], alt: "Conference background" }))));
 };

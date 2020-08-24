@@ -5,13 +5,16 @@ export interface IUser {
   email?: string;
   name?: string;
   avatar?: string;
-  currentUser?: boolean;
+
+  tableId?: string; // id of the table where the user is sitting
+  currentUser?: boolean; // true for currently logged user
 }
 
 export interface ISeat {
   x: number;
   y: number;
-  user?: IUser;
+  // user?: IUser;
+  userId?: string; // id of the user is sitting here
 }
 
 export interface ITable {
