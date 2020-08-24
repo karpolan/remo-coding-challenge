@@ -46,6 +46,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 exports.__esModule = true;
 var react_1 = require("react");
 var tableConfig_json_1 = require("./tableConfig.json");
@@ -59,67 +66,59 @@ var apis_1 = require("../apis");
 var Theater = function () {
     var history = react_router_dom_1.useHistory();
     var _a = react_1.useState(arrange_1.defaultUser), user = _a[0], setUser = _a[1]; // Current user
-    // const [table, setTable] = useState<ITable>(defaultTable)  // Table where Current user is sit
-    //  const [tables, setTables] = useState<ITable[]>([])  // All Tables where sitting user
     var _b = react_1.useState([]), users = _b[0], setUsers = _b[1]; // All users
     react_1.useEffect(function () {
+        function fetchData() {
+            return __awaiter(this, void 0, void 0, function () {
+                var usersFormApi;
+                var _this = this;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            // Current Logged user
+                            firebase_1["default"].auth().onAuthStateChanged(function (currentUser) { return __awaiter(_this, void 0, void 0, function () {
+                                var apiUser, _a, _b, _c;
+                                return __generator(this, function (_d) {
+                                    switch (_d.label) {
+                                        case 0:
+                                            if (!currentUser) return [3 /*break*/, 3];
+                                            return [4 /*yield*/, apis_1.apiGetCurrentUser()];
+                                        case 1:
+                                            apiUser = _d.sent();
+                                            _a = setUser;
+                                            _b = [__assign({}, apiUser)];
+                                            _c = { id: currentUser.uid, uid: currentUser.uid };
+                                            return [4 /*yield*/, currentUser.getIdToken()];
+                                        case 2:
+                                            _a.apply(void 0, [__assign.apply(void 0, _b.concat([(_c.idToken = _d.sent(), _c.email = String(currentUser.email), _c.name = String(currentUser.displayName), _c.avatar = String(currentUser.photoURL), _c.currentUser = true, _c)]))]);
+                                            return [3 /*break*/, 4];
+                                        case 3:
+                                            setUser(arrange_1.defaultUser);
+                                            _d.label = 4;
+                                        case 4: return [2 /*return*/];
+                                    }
+                                });
+                            }); });
+                            return [4 /*yield*/, apis_1.apiGetUsers()];
+                        case 1:
+                            usersFormApi = _a.sent();
+                            setUsers(usersFormApi);
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        }
         fetchData();
     }, []);
     react_1.useEffect(function () {
         if (!user || (user === null || user === void 0 ? void 0 : user.id) === arrange_1.defaultUser.id)
             return;
         apis_1.apiPostCurrentUser(user);
+        setUsers(__spreadArrays(users, [user]));
     }, [user]);
     function moveUserToTable(tableId) {
+        setUsers(users.filter(function (item) { return item.id !== user.id; }));
         setUser(__assign(__assign({}, user), { tableId: tableId }));
-    }
-    function fetchData() {
-        return __awaiter(this, void 0, void 0, function () {
-            var usersFormApi, currentUser;
-            var _this = this;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        // Current Logged user
-                        firebase_1["default"].auth().onAuthStateChanged(function (currentUser) { return __awaiter(_this, void 0, void 0, function () {
-                            var _a, _b;
-                            return __generator(this, function (_c) {
-                                switch (_c.label) {
-                                    case 0:
-                                        if (!currentUser) return [3 /*break*/, 2];
-                                        _a = setUser;
-                                        _b = {
-                                            id: currentUser.uid,
-                                            uid: currentUser.uid
-                                        };
-                                        return [4 /*yield*/, currentUser.getIdToken()];
-                                    case 1:
-                                        _a.apply(void 0, [(_b.idToken = _c.sent(),
-                                                _b.email = String(currentUser.email),
-                                                _b.name = String(currentUser.displayName),
-                                                _b.avatar = String(currentUser.photoURL),
-                                                _b.currentUser = true,
-                                                _b)]);
-                                        return [3 /*break*/, 3];
-                                    case 2:
-                                        setUser(arrange_1.defaultUser);
-                                        _c.label = 3;
-                                    case 3: return [2 /*return*/];
-                                }
-                            });
-                        }); });
-                        return [4 /*yield*/, apis_1.apiGetUsers()];
-                    case 1:
-                        usersFormApi = _a.sent();
-                        setUsers(usersFormApi);
-                        return [4 /*yield*/, apis_1.apiGetCurrentUser()];
-                    case 2:
-                        currentUser = _a.sent();
-                        console.log('currentUser:', currentUser);
-                        return [2 /*return*/];
-                }
-            });
-        });
     }
     var handleLogout = function () { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
@@ -137,9 +136,8 @@ var Theater = function () {
             console.log("Current user is already sitting on \"" + tableId + "\" table");
             return;
         }
-        //   const newTable = tableById(tableId);
-        var users = arrange_1.usersOnTable(tableId);
-        if (users.length >= arrange_1.MAX_USERS_ON_TABLE) {
+        var tableUsers = arrange_1.usersOnTable(users, tableId);
+        if (tableUsers.length >= arrange_1.MAX_USERS_ON_TABLE) {
             alert("No free seats on \"" + tableId + "\" table!");
             return;
         }

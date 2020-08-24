@@ -13,60 +13,45 @@ import { apiGetUsers, apiPostCurrentUser, apiGetCurrentUser } from '../apis'
 const Theater: React.FC = () => {
   const history = useHistory();
   const [user, setUser] = useState<IUser>(defaultUser) // Current user
-  // const [table, setTable] = useState<ITable>(defaultTable)  // Table where Current user is sit
-  //  const [tables, setTables] = useState<ITable[]>([])  // All Tables where sitting user
   const [users, setUsers] = useState<IUser[]>([])  // All users
 
   useEffect(() => {
+    async function fetchData() {
+      // Current Logged user
+      Firebase.auth().onAuthStateChanged(async (currentUser) => {
+        if (currentUser) {
+          const apiUser = await apiGetCurrentUser();
+          setUser({
+            ...apiUser,
+            id: currentUser.uid,
+            uid: currentUser.uid,
+            idToken: await currentUser.getIdToken(),
+            email: String(currentUser.email),
+            name: String(currentUser.displayName),
+            avatar: String(currentUser.photoURL),
+            currentUser: true,
+          })
+        } else {
+          setUser(defaultUser)
+        }
+      })
+
+      // Users form DB
+      const usersFormApi = await apiGetUsers()
+      setUsers(usersFormApi)
+    }
     fetchData();
   }, [])
 
   useEffect(() => {
     if (!user || user?.id === defaultUser.id) return;
     apiPostCurrentUser(user)
+    setUsers([...users, user])
   }, [user])
 
   function moveUserToTable(tableId: string) {
-    setUser({
-      ...user,
-      tableId
-    })
-  }
-
-  async function fetchData() {
-    // Current Logged user
-    Firebase.auth().onAuthStateChanged(async (currentUser) => {
-      if (currentUser) {
-        setUser({
-          id: currentUser.uid,
-          uid: currentUser.uid,
-          idToken: await currentUser.getIdToken(),
-          email: String(currentUser.email),
-          name: String(currentUser.displayName),
-          avatar: String(currentUser.photoURL),
-          currentUser: true,
-        })
-      } else {
-        setUser(defaultUser)
-      }
-    })
-    // Users form DB
-    const usersFormApi = await apiGetUsers()
-    setUsers(usersFormApi)
-
-    // console.log('users:', users)
-    // setTables(placeUserToTables(TABLES, users))
-
-    // Current user
-    const currentUser = await apiGetCurrentUser();
-    console.log('currentUser:', currentUser)
-    // if (currentUser.tableId) {
-    //   const tableForCurrentUser = findTableById(TABLES/*tables*/, currentUser.tableId)
-    //   const currentSeat = addUserToTable(tableForCurrentUser, currentUser)
-    //   if (currentSeat > -1) {
-    //     moveUserToTable(tableForCurrentUser as ITable)
-    //   }
-    // }
+    setUsers(users.filter((item) => item.id !== user.id))
+    setUser({ ...user, tableId })
   }
 
   const handleLogout = async () => {
@@ -80,14 +65,11 @@ const Theater: React.FC = () => {
       return;
     }
 
-    //   const newTable = tableById(tableId);
-
-    const users = usersOnTable(tableId);
-    if (users.length >= MAX_USERS_ON_TABLE) {
+    const tableUsers = usersOnTable(users, tableId);
+    if (tableUsers.length >= MAX_USERS_ON_TABLE) {
       alert(`No free seats on "${tableId}" table!`);
       return;
     }
-
     // Current User can be added to this table
     moveUserToTable(tableId)
   }

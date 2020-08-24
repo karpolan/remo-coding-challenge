@@ -24,7 +24,7 @@ const Table: React.FC<TableProps> = ({ id, x, y, width, height, seats, users, on
 			<div className="rt-room-name">{id}</div>
 			{users && users?.map((user: IUser, index) => {
 				const { id, name, avatar, currentUser } = user;
-				const seat: ISeat = seats && seats[index] || { x: 0, y: 0 };
+				const seat: ISeat = (seats && seats[index]) || { x: 0, y: 0 };
 				const { x, y } = seat;
 				return <UserComponent key={id || index} x={x} y={y} name={name} avatar={avatar} currentUser={currentUser} />
 			})}

@@ -18,7 +18,7 @@ var Table = function (_a) {
         React.createElement("div", { className: "rt-room-name" }, id),
         users && (users === null || users === void 0 ? void 0 : users.map(function (user, index) {
             var id = user.id, name = user.name, avatar = user.avatar, currentUser = user.currentUser;
-            var seat = seats && seats[index] || { x: 0, y: 0 };
+            var seat = (seats && seats[index]) || { x: 0, y: 0 };
             var x = seat.x, y = seat.y;
             return React.createElement(User_1["default"], { key: id || index, x: x, y: y, name: name, avatar: avatar, currentUser: currentUser });
         }))));
