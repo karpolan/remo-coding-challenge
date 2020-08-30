@@ -14,6 +14,7 @@ const Theater: React.FC = () => {
   const history = useHistory();
   const [user, setUser] = useState<IUser>(defaultUser) // Current user
   const [users, setUsers] = useState<IUser[]>([])  // All users
+  const [loading, setLoading] = useState<Boolean>(true)
 
   useEffect(() => {
     async function fetchData() {
@@ -39,6 +40,7 @@ const Theater: React.FC = () => {
       // Users form DB
       const usersFormApi = await apiGetUsers()
       setUsers(usersFormApi)
+      setLoading(false);
     }
     fetchData();
   }, [])
@@ -85,7 +87,7 @@ const Theater: React.FC = () => {
         </div>
       </div>
       <div className="rt-rooms">
-        {TABLES.map((table) =>
+        {loading ? <div>Loading...</div> : TABLES.map((table) =>
           <TableComponent
             key={table.id}
             {...table}

@@ -28,12 +28,6 @@ const Table: React.FC<TableProps> = ({ id, x, y, width, height, seats, users, on
 				const { x, y } = seat;
 				return <UserComponent key={id || index} x={x} y={y} name={name} avatar={avatar} currentUser={currentUser} />
 			})}
-
-			{/* {seats && seats?.map(({ x, y, userId }, index) => {
-				return <UserComponent key={user?.id || index} x={x} y={y} name={user?.name} avatar={user?.avatar} currentUser={user?.currentUser} />
-			})} */}
-
-
 		</div>
 	);
 };
