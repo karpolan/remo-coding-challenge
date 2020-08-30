@@ -1,10 +1,109 @@
-const API_URL = 'http://localhost:8000/';
+const API_URL = 'http://localhost:8000';
+const HEADERS = {
+  Accept: 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Content-Type': 'application/json',
+};
+
+/**
+ * Loads all users
+ */
+export async function apiGetUsers() {
+  const LOG_ID = 'apiGetUsers()';
+  console.time(LOG_ID);
+  try {
+    const res = await fetch(`${API_URL}/users`, {
+      headers: HEADERS,
+      method: 'GET',
+      mode: 'cors',
+    });
+    const result = await res.json();
+    // console.warn(`${LOG_ID} - success:`, result);
+    return result;
+  } catch (error) {
+    console.error(`${LOG_ID} -`, error);
+    return [];
+  } finally {
+    console.timeEnd(LOG_ID);
+  }
+}
+
+/**
+ * Saves All users
+ */
+export async function apiPostUsers(users: []) {
+  const LOG_ID = 'apiPostUsers()';
+  console.time(LOG_ID);
+  try {
+    const res = await fetch(`${API_URL}/users`, {
+      headers: HEADERS,
+      method: 'POST',
+      mode: 'cors',
+      body: JSON.stringify(users),
+    });
+    const result = res.status < 400;
+    // console.warn(`${LOG_ID} - success:`, result);
+    return result;
+  } catch (error) {
+    console.error(`${LOG_ID} -`, error);
+    return false;
+  } finally {
+    console.timeEnd(LOG_ID);
+  }
+}
+
+/**
+ * Returns currently logged user data
+ */
+export async function apiGetCurrentUser() {
+  const LOG_ID = 'apiGetCurrentUser()';
+  console.time(LOG_ID);
+  try {
+    const res = await fetch(`${API_URL}/currentUser`, {
+      headers: HEADERS,
+      method: 'GET',
+      mode: 'cors',
+    });
+    const result = await res.json();
+    // console.warn(`${LOG_ID} - success:`, result);
+    return result;
+  } catch (error) {
+    console.error(`${LOG_ID} -`, error);
+    return {};
+  } finally {
+    console.timeEnd(LOG_ID);
+  }
+}
+
+/**
+ * Saves currently logged user data and tableId
+ */
+export async function apiPostCurrentUser(user: object) {
+  const LOG_ID = 'apiPostCurrentUser()';
+  console.time(LOG_ID);
+  try {
+    const res = await fetch(`${API_URL}/currentUser`, {
+      headers: HEADERS,
+      method: 'POST',
+      mode: 'cors',
+      body: JSON.stringify(user),
+    });
+    const result = res.status < 400;
+    // console.warn(`${LOG_ID} - success:`, result);
+    return result;
+  } catch (error) {
+    console.error(`${LOG_ID} -`, error);
+    return false;
+  } finally {
+    console.timeEnd(LOG_ID);
+  }
+}
 
 export const sendGetRequest = async (endpoint: string) => {
-  const fullUrl = (endpoint.indexOf(API_URL) === -1) ? API_URL + endpoint : endpoint;
+  const fullUrl = endpoint.indexOf(API_URL) === -1 ? API_URL + endpoint : endpoint;
 
   const headers = {
-    'Accept': 'application/json',
+    Accept: 'application/json',
     'Access-Control-Allow-Origin': '*',
     'Content-Type': 'application/json',
   };
@@ -25,9 +124,9 @@ export const sendGetRequest = async (endpoint: string) => {
 };
 
 export const sendPostRequest = async (endpoint: string, data: any) => {
-  const fullUrl = (endpoint.indexOf(API_URL) === -1) ? API_URL + endpoint : endpoint;
+  const fullUrl = endpoint.indexOf(API_URL) === -1 ? API_URL + endpoint : endpoint;
   const headers = {
-    'Accept': 'application/json',
+    Accept: 'application/json',
     'Access-Control-Allow-Origin': '*',
     'Content-Type': 'application/json',
   };
