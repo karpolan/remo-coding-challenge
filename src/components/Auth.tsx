@@ -1,30 +1,27 @@
 import React, { useEffect } from 'react';
 import Firebase from '../services/firebase';
 import { useHistory } from 'react-router-dom';
-import { sendGetRequest, sendPostRequest } from '../apis';
 
 const Auth: React.FC = () => {
   const history = useHistory();
 
   useEffect(() => {
-    Firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        // TODO: Store user details
+    Firebase.auth().onAuthStateChanged(async (currentUser) => {
+      if (currentUser) {
+        // Don't save user data here, if clears tableId
+        // console.log('Logged User:', currentUser)
         history.push('/theater');
       }
     });
+  }, [/*history*/]);
 
-    // Sample API requests
-    sendGetRequest(`sample-get-request?param=1`).then(response => console.log(response));
-    sendPostRequest(`sample-post-request`, {postParam: 1}).then(response => console.log(response));
-  }, []);
   const redirect = () => {
     const provider = new Firebase.auth.GoogleAuthProvider();
     Firebase.auth().signInWithPopup(provider);
   };
 
-  return ( 
-    <div 
+  return (
+    <div
       style={{
         height: '100vh',
         display: 'flex',
@@ -35,8 +32,8 @@ const Auth: React.FC = () => {
     >
       <h1> Remo Coding Challenge Join Room </h1>
       <button onClick={redirect}> Login With Google </button>
-    </div> 
+    </div>
   );
 };
- 
+
 export default Auth;
